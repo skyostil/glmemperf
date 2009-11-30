@@ -1,0 +1,28 @@
+The data files contained in this directory have varying license terms as
+described below.
+
+Files xorg*
+-----------
+
+The 'xorg' icon is part of the Oxygen Icon Theme
+    Copyright (C) 2007 David Vignoni <david@icon-king.com>
+    Copyright (C) 2007 Johann Ollivier Lapeyre <johann@oxygen-icons.org>
+    Copyright (C) 2007 Kenneth Wimer <kwwii@bootsplash.org>
+    Copyright (C) 2007 Nuno Pinheiro <nuno@oxygen-icons.org>
+    Copyright (C) 2007 Riccardo Iaconelli <riccardo@oxygen-icons.org>
+    Copyright (C) 2007 David Miller <miller@oxygen-icons.org>
+
+    See http://kde.org for complete license terms.
+
+Files abstract*, water* and digital_nature*
+-------------------------------------------
+
+Copyright (C) 2009 Nokia Corporation. All rights reserved.
+
+The content of this package (including, but not limited to, pictures and icons)
+are protected by intellectual property rights controlled by Nokia Corporation
+and third parties. You may use this material in connection to the GLMemPerf
+program only. The material may not be used, modified, reproduced, transmitted,
+published, sold, licensed or distributed to any third parties, combined with
+any applications or exploited in any other way, without the written consent of
+Nokia.

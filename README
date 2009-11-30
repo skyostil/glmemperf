@@ -1,0 +1,18 @@
+GLMemPerf
+=========
+
+Author: Sami Kyöstilä <sami.kyostila@nokia.com>
+
+This benchmark aims to measure the texture memory bandwidth performance of an
+OpenGL ES 2.0 implementation using a number of different texture storage
+formats and methods.
+
+See COPYING for license terms.
+
+The program depends on the following libraries:
+
+ - libx11
+ - libxext
+ - libosso (optional)
+ - libEGL
+ - libGLESv2

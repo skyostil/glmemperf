@@ -1,0 +1,21 @@
+Source: glmemperf
+Section: graphics
+Priority: extra
+Maintainer: Sami Kyöstilä <sami.kyostila@nokia.com>
+Build-Depends: debhelper (>= 5), autotools-dev, libosso-dev, libx11-dev, libxext-dev, libgles2-sgx-img-dev
+Standards-Version: 3.7.2
+
+Package: glmemperf
+Architecture: any
+Depends: glmemperf-data (>= 0.1), ${shlibs:Depends}, ${misc:Depends}
+Description: A benchmark for measuring OpenGL ES 2.0 rendering performance
+ This benchmark aims to measure the texture memory bandwidth performance of an
+ OpenGL ES 2.0 implementation using a number of different texture storage
+ formats and methods.
+
+Package: glmemperf-data
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Data files for the GLMemPerf benchmark.
+ This package contains data files (images) used by the GLMemPerf performance
+ measurement application.
