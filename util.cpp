@@ -273,7 +273,6 @@ void dumpConfig(EGLDisplay dpy, EGLConfig config)
     DUMP_CFG_ATTRIB(EGL_NATIVE_RENDERABLE, defaultConsts, defaultBits);
     DUMP_CFG_ATTRIB(EGL_NATIVE_VISUAL_ID, defaultConsts, defaultBits);
     DUMP_CFG_ATTRIB(EGL_NATIVE_VISUAL_TYPE, defaultConsts, defaultBits);
-    DUMP_CFG_ATTRIB(EGL_PRESERVED_RESOURCES, defaultConsts, defaultBits);
     DUMP_CFG_ATTRIB(EGL_SAMPLES, defaultConsts, defaultBits);
     DUMP_CFG_ATTRIB(EGL_SAMPLE_BUFFERS, defaultConsts, defaultBits);
     DUMP_CFG_ATTRIB(EGL_SURFACE_TYPE, defaultConsts, surfaceTypeBits);
