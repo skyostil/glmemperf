@@ -54,6 +54,7 @@ static struct
     int                    bitsPerPixel;
     bool                   verbose;
     int                    minTime;
+    bool                   listTests;
     std::list<std::string> includedTests;
     std::list<std::string> excludedTests;
 } options;
@@ -196,6 +197,12 @@ void runTest(Test& test)
     int64_t minTime = options.minTime * 1000 * 1000 * 1000LL;
     struct timespec res, start, end;
 
+    if (options.listTests)
+    {
+        printf("%s\n", test.name().c_str());
+        return;
+    }
+
     if (!shouldRunTest(test.name()))
     {
         return;
@@ -292,6 +299,7 @@ void showUsage()
         "Options:\n"
         "       -h             This text\n"
         "       -v             Verbose mode\n"
+        "       -l             List all tests without running them\n"
         "       -i TEST        Include a specific test (full name or substring)\n"
         "       -e TEST        Exclude a specific test (full name or substring)\n"
         "       -t SECS        Minimum time to run each test\n"
@@ -306,6 +314,7 @@ void parseArguments(const std::list<std::string>& args)
     options.verbose = false;
     options.minTime = 1;
     options.bitsPerPixel = 16;
+    options.listTests = false;
 
     for (i = args.begin(), i++; i != args.end(); ++i)
     {
@@ -333,6 +342,10 @@ void parseArguments(const std::list<std::string>& args)
         else if (*i == "-v")
         {
             options.verbose = true;
+        }
+        else if (*i == "-l")
+        {
+            options.listTests = true;
         }
         else
         {
