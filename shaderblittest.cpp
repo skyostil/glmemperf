@@ -23,6 +23,7 @@
 #include "shaderblittest.h"
 #include <sstream>
 #include <GLES2/gl2ext.h>
+#include <stdlib.h>
 
 ShaderBlitTest::ShaderBlitTest(const std::string& effect, int width, int height, 
                                float texW, float texH,
