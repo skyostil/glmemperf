@@ -74,8 +74,7 @@ bool initializeEgl(int width, int height, const EGLint* configAttrs, const EGLin
     ossoContext = osso_initialize("com.nokia.memperf", "1.0", FALSE, NULL);
     if (!ossoContext)
     {
-        perror("osso_initialize");
-        goto out_error;
+        printf("Warning: osso_initialize failed\n");
     }
 #endif
 
