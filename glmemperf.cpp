@@ -423,6 +423,8 @@ int main(int argc, char** argv)
     // Normal blits
     ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw"));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgb888.raw"));
+    ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,              864, 480, "data/water2_864x480_rgba8888.raw"));
+    ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_BYTE,              864, 480, "data/water2_864x480_rgb888.raw"));
     ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,             1024, 512, "data/digital_nature2_1024x512_rgba8888.raw", false, 800.0 / 1024, 480.0 / 512));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw"));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,      1024, 512, "data/digital_nature2_1024x512_rgb565.raw", false, 800.0 / 1024, 480.0 / 512));
@@ -439,6 +441,8 @@ int main(int argc, char** argv)
     // Rotated blits
     ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,              480,  800, "data/water2_480x800_rgba8888.raw", true));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_BYTE,              480,  800, "data/water2_480x800_rgb888.raw", true));
+    ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,              480,  864, "data/water2_480x864_rgba8888.raw", true));
+    ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_BYTE,              480,  864, "data/water2_480x864_rgb888.raw", true));
     ADD_TEST(BlitTest(GL_RGBA, GL_UNSIGNED_BYTE,              512, 1024, "data/digital_nature2_512x1024_rgba8888.raw", true, 480.0 / 512, 800.0 / 1024));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       480,  800, "data/water2_480x800_rgb565.raw", true));
     ADD_TEST(BlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       512, 1024, "data/digital_nature2_512x1024_rgb565.raw", true, 480.0 / 512, 800.0 / 1024));
