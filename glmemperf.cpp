@@ -499,5 +499,8 @@ int main(int argc, char** argv)
     ADD_TEST(CPUInterleavingTest(CPUI_TEXTURE_UPLOAD, 2, 16, winWidth, winHeight));
     ADD_TEST(CPUInterleavingTest(CPUI_TEXTURE_UPLOAD, 2, 32, winWidth, winHeight));
 
+    ADD_TEST(CPUInterleavingTest(CPUI_EGL_LOCK_SURFACE, 2, 16, winWidth, winHeight));
+    ADD_TEST(CPUInterleavingTest(CPUI_EGL_LOCK_SURFACE, 2, 32, winWidth, winHeight));
+
     terminateEgl();
 }

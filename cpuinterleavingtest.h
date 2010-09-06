@@ -25,8 +25,14 @@
 
 #include "blittest.h"
 #include "util.h"
+#include "ext.h"
+
 #include <map>
+
 #include <EGL/egl.h>
+
+#include <GLES2/gl2ext.h>
+
 #include <X11/extensions/XShm.h>
 
 enum CPUInterleavingMethod
@@ -48,6 +54,7 @@ class CPUInterleavingTest: public BlitTest
     GLuint m_textures[CPUI_MAX_BUFFERS];
     
     char* m_textureData[CPUI_MAX_BUFFERS];
+    int m_textureDataSize[CPUI_MAX_BUFFERS];
     int m_dataStride;
     int m_dataBitsPerPixel;
 
@@ -56,6 +63,7 @@ class CPUInterleavingTest: public BlitTest
 
     Pixmap m_pixmaps[CPUI_MAX_BUFFERS];
     EGLSurface m_surfaces[CPUI_MAX_BUFFERS];
+    EGLImageKHR m_images[CPUI_MAX_BUFFERS];
     EGLConfig m_config;
     
     XShmSegmentInfo m_shminfo[CPUI_MAX_BUFFERS];
@@ -64,6 +72,15 @@ class CPUInterleavingTest: public BlitTest
     int m_completionEvent;
     std::map<Drawable, int> m_drawableIndex;
     bool m_writeCompleted[CPUI_MAX_BUFFERS];
+
+    // Lock surface functions
+    PFNEGLLOCKSURFACEKHRPROC m_eglLockSurfaceKHR;
+    PFNEGLUNLOCKSURFACEKHRPROC m_eglUnlockSurfaceKHR;
+
+    // EGLImage functions
+    PFNEGLCREATEIMAGEKHRPROC m_eglCreateImageKHR;
+    PFNEGLDESTROYIMAGEKHRPROC m_eglDestroyImageKHR;
+    PFNGLEGLIMAGETARGETTEXTURE2DOESPROC m_glEGLImageTargetTexture2DOES;
 
 public:
     CPUInterleavingTest(CPUInterleavingMethod method, int buffers,

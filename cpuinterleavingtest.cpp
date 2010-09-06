@@ -163,7 +163,82 @@ void CPUInterleavingTest::prepare()
                 m_dataStride = m_ximage[i]->bytes_per_line;
                 m_writeCompleted[i] = true;
                 m_drawableIndex[m_pixmaps[i]] = i;
-	    }
+            }
+        }
+        break;
+    case CPUI_EGL_LOCK_SURFACE:
+        {
+            if (!isEGLExtensionSupported("EGL_KHR_lock_surface2"))
+            {
+                fail("EGL_KHR_lock_surface2 not supported");
+            }
+
+            // Get function pointers
+            m_eglLockSurfaceKHR =
+                (PFNEGLLOCKSURFACEKHRPROC)eglGetProcAddress("eglLockSurfaceKHR");
+            m_eglUnlockSurfaceKHR =
+                (PFNEGLUNLOCKSURFACEKHRPROC)eglGetProcAddress("eglUnlockSurfaceKHR");
+
+            assert(m_eglLockSurfaceKHR);
+            assert(m_eglUnlockSurfaceKHR);
+
+            if (!isEGLExtensionSupported("EGL_KHR_image_base"))
+            {
+                fail("EGL_KHR_image_base not supported");
+            }
+
+            if (!isEGLExtensionSupported("EGL_KHR_image_pixmap"))
+            {
+                fail("EGL_KHR_image_pixmap not supported");
+            }
+
+            m_eglCreateImageKHR =
+                (PFNEGLCREATEIMAGEKHRPROC)eglGetProcAddress("eglCreateImageKHR");
+            m_eglDestroyImageKHR =
+                (PFNEGLDESTROYIMAGEKHRPROC)eglGetProcAddress("eglDestroyImageKHR");
+            m_glEGLImageTargetTexture2DOES =
+                (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+
+            assert(m_eglCreateImageKHR);
+            assert(m_eglDestroyImageKHR);
+            assert(m_glEGLImageTargetTexture2DOES);
+
+            const EGLint pixmapConfigAttrs[] =
+            {
+                EGL_SURFACE_TYPE, EGL_PIXMAP_BIT | EGL_LOCK_SURFACE_BIT_KHR,
+                EGL_MATCH_FORMAT_KHR,
+                    (m_dataBitsPerPixel == 16) ? EGL_FORMAT_RGB_565_EXACT_KHR :
+                                                 EGL_FORMAT_RGBA_8888_EXACT_KHR,
+                EGL_BUFFER_SIZE, m_dataBitsPerPixel,
+                EGL_NONE
+            };
+            EGLint configCount = 0;
+
+            eglChooseConfig(ctx.dpy, pixmapConfigAttrs, &m_config, 1, &configCount);
+            assert(configCount);
+
+            for (i = 0; i < m_buffers; i++)
+            {
+                success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy,
+                                             m_config, m_width, m_height, &m_pixmaps[i]);
+                assert(success);
+
+                m_surfaces[i] = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmaps[i], NULL);
+                assert(m_surfaces[i] != EGL_NO_SURFACE);
+
+                // Create an EGL image from the pixmap
+                m_images[i] = m_eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT,
+                                                  EGL_NATIVE_PIXMAP_KHR,
+                                                  (EGLClientBuffer)m_pixmaps[i],
+                                                  NULL);
+                assert(m_images[i]);
+
+                // Bind the image to a texture
+                glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+                m_glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_images[i]);
+                ASSERT_GL();
+                m_writeCompleted[i] = true;
+            }
         }
         break;
     default:
@@ -200,7 +275,17 @@ void CPUInterleavingTest::teardown()
                 eglDestroySurface(ctx.dpy, m_surfaces[i]);
                 nativeDestroyPixmap(ctx.nativeDisplay, m_pixmaps[i]);
                 XFreeGC(ctx.nativeDisplay, m_gc[i]);
-	    }
+            }
+        }
+        break;
+    case CPUI_EGL_LOCK_SURFACE:
+        {
+            for (i = 0; i < m_buffers; i++)
+            {
+                m_eglDestroyImageKHR(ctx.dpy, m_images[i]);
+                eglDestroySurface(ctx.dpy, m_surfaces[i]);
+                nativeDestroyPixmap(ctx.nativeDisplay, m_pixmaps[i]);
+            }
         }
         break;
     default:
@@ -253,6 +338,26 @@ std::string CPUInterleavingTest::name() const
 
 void CPUInterleavingTest::operator()(int frame)
 {
+    switch (m_method)
+    {
+    case CPUI_EGL_LOCK_SURFACE:
+        {
+            EGLint lockAttrs[] =
+            {
+                EGL_LOCK_USAGE_HINT_KHR, EGL_WRITE_SURFACE_BIT_KHR,
+                EGL_NONE
+            };
+            m_eglLockSurfaceKHR(ctx.dpy, m_surfaces[m_writeBuffer], lockAttrs);
+            eglQuerySurface(ctx.dpy, m_surfaces[m_writeBuffer], EGL_BITMAP_POINTER_KHR,
+                            reinterpret_cast<EGLint*>(&m_textureData[m_writeBuffer]));
+            eglQuerySurface(ctx.dpy, m_surfaces[m_writeBuffer], EGL_BITMAP_PITCH_KHR,
+                            reinterpret_cast<EGLint*>(&m_dataStride));
+        }
+        break;
+    default:
+        break;
+    }
+
     switch (m_dataBitsPerPixel)
     {
     case 16:
@@ -299,6 +404,11 @@ void CPUInterleavingTest::operator()(int frame)
             XShmPutImage(ctx.nativeDisplay, m_pixmaps[m_writeBuffer], m_gc[m_writeBuffer],
                          m_ximage[m_writeBuffer], 0, 0, 0, 0, m_width, m_height, True);
             m_writeCompleted[m_writeBuffer] = false;
+        }
+        break;
+    case CPUI_EGL_LOCK_SURFACE:
+        {
+            m_eglUnlockSurfaceKHR(ctx.dpy, m_surfaces[m_readBuffer]);
         }
         break;
     default:
