@@ -6,6 +6,7 @@ CFLAGS=${X_CFLAGS} ${X_CLAGS} -Wall -g -O3 -DSUPPORT_X11 -DPREFIX=\"$(prefix)\"
 CXXFLAGS=${X_CFLAGS} ${OSSO_CFLAGS} -Wall -g -O3 -DSUPPORT_X11 -DPREFIX=\"$(prefix)\"
 
 bin_PROGRAMS = glmemperf
+bin_SCRIPTS = glmemperf-create-ref.sh
 glmemperf_SOURCES = \
     glmemperf.cpp \
     native_x11.c \
