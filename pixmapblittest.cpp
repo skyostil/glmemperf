@@ -48,7 +48,8 @@ void fillImage(XImage& img)
 PixmapBlitTest::PixmapBlitTest(int width, int height, EGLConfig config,
                                bool rotate, float texW, float texH):
     BlitTest(width, height, rotate, texW, texH),
-    m_config(config)
+    m_config(config),
+    m_depth(0)
 {
     eglGetConfigAttrib(ctx.dpy, m_config, EGL_BUFFER_SIZE, &m_depth);
 }
@@ -58,6 +59,11 @@ void PixmapBlitTest::prepare()
     if (!isEGLExtensionSupported("EGL_NOKIA_texture_from_pixmap"))
     {
         fail("EGL_NOKIA_texture_from_pixmap not supported");
+    }
+
+    if (!m_config)
+    {
+        fail("Config not found");
     }
 
     BlitTest::prepare();
