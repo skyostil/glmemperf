@@ -1,6 +1,6 @@
 /**
  * OpenGL ES 2.0 memory performance estimator
- * Copyright (C) 2009 Nokia
+ * Copyright (C) 2010 Nokia
  *
  * \author Sami Kyöstilä <sami.kyostila@nokia.com>
  *

@@ -1,6 +1,6 @@
 /**
  * OpenGL ES 2.0 memory performance estimator
- * Copyright (C) 2009 Nokia
+ * Copyright (C) 2010 Nokia
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

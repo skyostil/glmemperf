@@ -1,6 +1,6 @@
 /**
  * OpenGL ES 2.0 memory performance estimator
- * Copyright (C) 2009 Nokia
+ * Copyright (C) 2010 Nokia
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -284,7 +284,7 @@ void showIntro()
 {
     std::cout << 
         "GLMemPerf v" PACKAGE_VERSION " - OpenGL ES 2.0 memory performance benchmark\n"
-        "Copyright (C) 2009 Nokia Corporation. GLMemPerf comes with ABSOLUTELY\n"
+        "Copyright (C) 2010 Nokia Corporation. GLMemPerf comes with ABSOLUTELY\n"
         "NO WARRANTY; This is free software, and you are welcome to redistribute\n"
         "it under certain conditions.\n"
         "\n";
