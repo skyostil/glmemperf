@@ -1,5 +1,11 @@
+glmemperf (0.2) unstable; urgency=low
+
+  * Added blur test
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Fri, 19 Nov 2010 15:21:34 +0200
+
 glmemperf (0.1) unstable; urgency=low
 
-  * Initial Release.
+  * Initial release
 
  -- Sami Kyöstilä <sami.kyostila@nokia.com>  Mon, 23 Nov 2009 16:03:06 +0200
