@@ -22,7 +22,9 @@
  */
 #include "blittest.h"
 #include "util.h"
+
 #include <sstream>
+#include <stdio.h>
 
 const char *defaultVertSource = 
     "precision mediump float;\n"

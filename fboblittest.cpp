@@ -22,6 +22,8 @@
  */
 #include "fboblittest.h"
 #include "util.h"
+
+#include <stdio.h>
 #include <sstream>
 
 FBOBlitTest::FBOBlitTest(GLenum format, GLenum type, int width, int height,

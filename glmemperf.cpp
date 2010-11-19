@@ -20,8 +20,14 @@
  */
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+
 #include <X11/Xutil.h>
+
 #include <EGL/egl.h>
+
+#include <sys/stat.h>
+
+#include <stdio.h>
 #include <string>
 #include <unistd.h>
 #include <time.h>
@@ -29,7 +35,6 @@
 #include <list>
 #include <iostream>
 #include <algorithm>
-#include <sys/stat.h>
 
 #include "native.h"
 #include "util.h"

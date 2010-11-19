@@ -23,7 +23,10 @@
 #include "pixmapblittest.h"
 #include "util.h"
 #include "native.h"
+
 #include <sstream>
+#include <stdio.h>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 

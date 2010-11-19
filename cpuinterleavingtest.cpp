@@ -23,10 +23,14 @@
 #include "cpuinterleavingtest.h"
 #include "util.h"
 #include "native.h"
+
 #include <sstream>
+#include <stdio.h>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XShm.h>
+
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
