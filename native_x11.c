@@ -21,12 +21,17 @@
  *  Native windowing implementation for X11
  */
 #include <EGL/egl.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
+#include <X11/extensions/Xcomposite.h>
+
 #include "native.h"
 
 EGLBoolean nativeCreateDisplay(EGLNativeDisplayType *pNativeDisplay)
@@ -63,6 +68,52 @@ static int runningOnFremantle(void)
     }
     pclose(f);
     return found;
+}
+
+static int lastError = 0;
+
+int errorHandler(Display *dpy, XErrorEvent *event)
+{
+    (void)dpy;
+    lastError = event->error_code;
+    return 0;
+}
+
+int isWindowRedirected(Display *d, Window window)
+{
+    XErrorHandler prevHandler;
+
+    /*
+     *  Detect window composition by requesting the redirected pixmap name. If
+     *  the window is not redirected, then this will trigger a BadAccess error.
+     */
+    XLockDisplay(d);
+    lastError = 0;
+    XSync(d, 0);
+    prevHandler = XSetErrorHandler(errorHandler);
+    (void)XCompositeNameWindowPixmap(d, window);
+    XSync(d, 0);
+    XSetErrorHandler(prevHandler);
+    XUnlockDisplay(d);
+
+    return (lastError == 0);
+}
+
+static Bool waitForNotify(Display *d, XEvent *e, char *arg)
+{
+    return (e->type == FocusIn) && (e->xfocus.window == (Window)arg);
+}
+
+static void waitUntilWindowIsFocused(Display *d, Window window)
+{
+    int timeout = 30;
+    XEvent event;
+    XSelectInput(d, window, FocusChangeMask);
+    while (timeout-- &&
+           !XCheckIfEvent(d, &event, waitForNotify, (char*) window))
+    {
+        usleep(100 * 1000);
+    }
 }
 
 EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy, EGLConfig config, 
@@ -127,10 +178,6 @@ EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
             XChangeProperty(nativeDisplay, window, windowType, XA_ATOM, 32, PropModeReplace, (unsigned char*)&windowTypeOverride, 1);
         }
     }
-    else
-    {
-        printf("Warning: using a composited window\n");
-    }
 
     windowTitle.value    = (unsigned char*)title;
     windowTitle.encoding = XA_STRING;
@@ -159,8 +206,11 @@ EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
         XSendEvent(nativeDisplay, rootWindow, False, SubstructureNotifyMask, &xev);
     }
 
+    waitUntilWindowIsFocused(nativeDisplay, window);
+
     *nativeWindow = window;
-    
+    nativeVerifyWindow(nativeDisplay, *nativeWindow);
+
     return EGL_TRUE;
 }
 
@@ -200,4 +250,17 @@ EGLBoolean nativeCreatePixmap(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
 void nativeDestroyPixmap(EGLNativeDisplayType nativeDisplay, EGLNativePixmapType nativePixmap)
 {
     XFreePixmap(nativeDisplay, nativePixmap);
+}
+
+EGLBoolean nativeVerifyWindow(EGLNativeDisplayType nativeDisplay,
+                              EGLNativeWindowType nativeWindow)
+{
+    static int compWarningShown = 0;
+    if (!compWarningShown && isWindowRedirected(nativeDisplay, (Window)nativeWindow))
+    {
+        printf("Warning: using a composited window; results may not be reliable\n");
+        compWarningShown = 1;
+        return EGL_FALSE;
+    }
+    return EGL_TRUE;
 }

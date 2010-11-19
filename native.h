@@ -60,6 +60,17 @@ EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
 void nativeDestroyWindow(EGLNativeDisplayType nativeDisplay, EGLNativeWindowType nativeWindow);
 
 /**
+ *  Check that a native window is suitable for performance measurement
+ *  purposes. For example, a window which is drawn through composition may have
+ *  a performance overhead compared to a direct rendered window.
+ *
+ *  @param nativeDisplay                Native display handle
+ *  @param nativeWindow                 Window to verify
+ */
+EGLBoolean nativeVerifyWindow(EGLNativeDisplayType nativeDisplay,
+                              EGLNativeWindowType nativeWindow);
+
+/**
  *  Create a native pixmap
  *
  *  @param nativeDisplay                Native display handle

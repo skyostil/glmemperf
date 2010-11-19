@@ -226,6 +226,8 @@ void runTest(Test& test)
         return;
     }
 
+    nativeVerifyWindow(ctx.nativeDisplay, ctx.win);
+
     while (warmup--)
     {
         test(0);

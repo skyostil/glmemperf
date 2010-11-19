@@ -13,7 +13,7 @@ AC_PROG_CC
 AC_CHECK_LIB([EGL], [eglInitialize])
 AC_CHECK_LIB([GLESv2], [glDrawElements])
 AC_CHECK_LIB([rt], [clock_gettime])
-PKG_CHECK_MODULES([X], [x11 >= 1.0 xext >= 1.0])
+PKG_CHECK_MODULES([X], [x11 >= 1.0 xext >= 1.0 xcomposite >= 0.4])
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LIBS)
 PKG_CHECK_MODULES([OSSO], 
