@@ -1,4 +1,4 @@
-#!/bin/bin/python
+#!/usr/bin/python
 # -*- encoding: iso-8859-1 -*-
 # OpenGL ES 2.0 memory performance estimator
 # Copyright (C) 2009 Nokia
