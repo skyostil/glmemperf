@@ -1,3 +1,13 @@
+glmemperf (0.9) unstable; urgency=low
+
+  * Add local tokens for PVRTC formats
+  * Add missing includes that prevent compilation
+  * Throw instead of aborting on GL/EGL errors
+  * Throw instead of aborting on assertion failures
+  * Skip pixmap blit test if no config is available
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Fri, 19 Nov 2010 17:46:52 +0200
+
 glmemperf (0.8) unstable; urgency=low
 
   * Warn if window is going through composition
