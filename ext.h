@@ -66,4 +66,60 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLUNLOCKSURFACEKHRPROC) (EGLDisplay display
 #define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG                     0x8C03
 #endif
 
+#ifndef EGL_KHR_image
+#define EGL_KHR_image 1
+#define EGL_NATIVE_PIXMAP_KHR			0x30B0	/* eglCreateImageKHR target */
+typedef void *EGLImageKHR;
+#define EGL_NO_IMAGE_KHR			((EGLImageKHR)0)
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLImageKHR EGLAPIENTRY eglCreateImageKHR (EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list);
+EGLAPI EGLBoolean EGLAPIENTRY eglDestroyImageKHR (EGLDisplay dpy, EGLImageKHR image);
+#endif /* EGL_EGLEXT_PROTOTYPES */
+typedef EGLImageKHR (EGLAPIENTRYP PFNEGLCREATEIMAGEKHRPROC) (EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list);
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLDESTROYIMAGEKHRPROC) (EGLDisplay dpy, EGLImageKHR image);
+#endif
+
+#ifndef EGL_KHR_vg_parent_image
+#define EGL_KHR_vg_parent_image 1
+#define EGL_VG_PARENT_IMAGE_KHR			0x30BA	/* eglCreateImageKHR target */
+#endif
+
+#ifndef EGL_KHR_gl_texture_2D_image
+#define EGL_KHR_gl_texture_2D_image 1
+#define EGL_GL_TEXTURE_2D_KHR			0x30B1	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_LEVEL_KHR		0x30BC	/* eglCreateImageKHR attribute */
+#endif
+
+#ifndef EGL_KHR_gl_texture_cubemap_image
+#define EGL_KHR_gl_texture_cubemap_image 1
+#define EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR	0x30B3	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_X_KHR	0x30B4	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Y_KHR	0x30B5	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_KHR	0x30B6	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Z_KHR	0x30B7	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_KHR	0x30B8	/* eglCreateImageKHR target */
+#endif
+
+#ifndef EGL_KHR_gl_texture_3D_image
+#define EGL_KHR_gl_texture_3D_image 1
+#define EGL_GL_TEXTURE_3D_KHR			0x30B2	/* eglCreateImageKHR target */
+#define EGL_GL_TEXTURE_ZOFFSET_KHR		0x30BD	/* eglCreateImageKHR attribute */
+#endif
+
+#ifndef EGL_KHR_gl_renderbuffer_image
+#define EGL_KHR_gl_renderbuffer_image 1
+#define EGL_GL_RENDERBUFFER_KHR			0x30B9	/* eglCreateImageKHR target */
+#endif
+
+/* GL_OES_EGL_image */
+#ifndef GL_OES_EGL_image
+#define GL_OES_EGL_image 1
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glEGLImageTargetTexture2DOES (GLenum target, GLeglImageOES image);
+GL_APICALL void GL_APIENTRY glEGLImageTargetRenderbufferStorageOES (GLenum target, GLeglImageOES image);
+#endif
+typedef void (GL_APIENTRYP PFNGLEGLIMAGETARGETTEXTURE2DOESPROC) (GLenum target, GLeglImageOES image);
+typedef void (GL_APIENTRYP PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC) (GLenum target, GLeglImageOES image);
+#endif
+
 #endif // EXT_H

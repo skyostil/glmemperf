@@ -18,22 +18,28 @@
  *
  * \author Sami Kyöstilä <sami.kyostila@nokia.com>
  *
- * X11 pixmap surface test using shared memory and eglBindTexImage
+ * X11 pixmap surface test using EGLImage
  */
 #ifndef PIXMAPBLITTEST_H
 #define PIXMAPBLITTEST_H
 
+#include <EGL/egl.h>
+
 #include "blittest.h"
 #include "util.h"
-#include <EGL/egl.h>
+#include "ext.h"
 
 class PixmapBlitTest: public BlitTest
 {
     Pixmap m_pixmap;
-    EGLSurface m_surface;
-    EGLContext m_context;
     EGLConfig m_config;
+    EGLImageKHR m_image;
     int m_depth;
+
+    PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
+    PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
+    PFNGLEGLIMAGETARGETTEXTURE2DOESPROC glEGLImageTargetTexture2DOES;
+
 public:
     PixmapBlitTest(int width, int height, EGLConfig config,
                    bool rotate = false, float texW = 1.0f, float texH = 1.0f);

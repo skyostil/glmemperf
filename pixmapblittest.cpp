@@ -18,7 +18,7 @@
  *
  * \author Sami Kyöstilä <sami.kyostila@nokia.com>
  *
- * X11 pixmap surface test using shared memory and eglBindTexImage
+ * X11 pixmap surface test using EGLImage
  */
 #include "pixmapblittest.h"
 #include "util.h"
@@ -48,7 +48,9 @@ void fillImage(XImage& img)
 PixmapBlitTest::PixmapBlitTest(int width, int height, EGLConfig config,
                                bool rotate, float texW, float texH):
     BlitTest(width, height, rotate, texW, texH),
+    m_pixmap(0),
     m_config(config),
+    m_image(0),
     m_depth(0)
 {
     eglGetConfigAttrib(ctx.dpy, m_config, EGL_BUFFER_SIZE, &m_depth);
@@ -56,9 +58,14 @@ PixmapBlitTest::PixmapBlitTest(int width, int height, EGLConfig config,
 
 void PixmapBlitTest::prepare()
 {
-    if (!isEGLExtensionSupported("EGL_NOKIA_texture_from_pixmap"))
+    if (!isEGLExtensionSupported("EGL_KHR_image_pixmap"))
     {
-        fail("EGL_NOKIA_texture_from_pixmap not supported");
+        fail("EGL_KHR_image_pixmap not supported");
+    }
+
+    if (!isGLExtensionSupported("GL_OES_EGL_image"))
+    {
+        fail("GL_OES_EGL_image not supported");
     }
 
     if (!m_config)
@@ -66,32 +73,41 @@ void PixmapBlitTest::prepare()
         fail("Config not found");
     }
 
+    eglCreateImageKHR =
+        (PFNEGLCREATEIMAGEKHRPROC)eglGetProcAddress("eglCreateImageKHR");
+    eglDestroyImageKHR =
+        (PFNEGLDESTROYIMAGEKHRPROC)eglGetProcAddress("eglDestroyImageKHR");
+    glEGLImageTargetTexture2DOES =
+        (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+
+    ASSERT(eglCreateImageKHR);
+    ASSERT(eglDestroyImageKHR);
+    ASSERT(glEGLImageTargetTexture2DOES);
+
     BlitTest::prepare();
 
     EGLBoolean success;
     initializeBlitter();
 
     success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy, m_config, m_width,
-	                         m_height, &m_pixmap);
+                                 m_height, &m_pixmap);
     ASSERT(success);
 
     success = fillPixmap();
     ASSERT(success);
 
-    const EGLint surfAttrs[] =
+    const EGLint imageAttributes[] =
     {
-        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGB,
-        EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
-        EGL_MIPMAP_TEXTURE, EGL_FALSE,
+        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
     };
 
-    m_surface = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmap, surfAttrs);
-    ASSERT(m_surface != EGL_NO_SURFACE);
+    m_image = eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+                                (EGLClientBuffer)m_pixmap, imageAttributes);
+    ASSERT(m_image);
+    ASSERT_EGL();
 
-    success = eglBindTexImage(ctx.dpy, m_surface, EGL_BACK_BUFFER);
-    ASSERT(success);
-
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_image);
     ASSERT_GL();
 }
 
@@ -129,8 +145,7 @@ bool PixmapBlitTest::fillPixmap()
 
 void PixmapBlitTest::teardown()
 {
-    eglReleaseTexImage(ctx.dpy, m_surface, EGL_BACK_BUFFER);
-    eglDestroySurface(ctx.dpy, m_surface);
+    eglDestroyImageKHR(ctx.dpy, m_image);
     nativeDestroyPixmap(ctx.nativeDisplay, m_pixmap);
     BlitTest::teardown();
 }
