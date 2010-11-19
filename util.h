@@ -29,6 +29,16 @@
 #include <EGL/egl.h>
 #include <assert.h>
 
+class GLException : public std::exception {
+public:
+    GLException(const char *what) : m_what(what) { }
+    ~GLException() throw() { }
+    const char *what() const throw() { return m_what.c_str(); }
+
+private:
+    std::string m_what;
+};
+
 /**
  *  Verify that GL commands up to this point have not produced any errors.
  */
@@ -38,8 +48,9 @@
         GLint err = glGetError(); \
         if (err) \
         { \
-            printf("GL error 0x%x (%d) at %s:%d\n", err, err, __FILE__, __LINE__); \
-            assert(!err); \
+            char msg[100]; \
+            snprintf(msg, 100, "GL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            throw GLException(msg); \
         } \
     } while (0)
 
@@ -52,8 +63,9 @@
         EGLint err = eglGetError(); \
         if (err != EGL_SUCCESS) \
         { \
-            printf("EGL error 0x%x (%d) at %s:%d\n", err, err, __FILE__, __LINE__); \
-            assert(!err); \
+            char msg[100]; \
+            snprintf(msg, 100, "EGL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            throw GLException(msg); \
         } \
     } while (0)
 
