@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
-AC_INIT([glmemperf], [0.7], [sami.kyostila@nokia.com])
-AM_INIT_AUTOMAKE([glmemperf], [0.7])
+AC_INIT([glmemperf], [0.8], [sami.kyostila@nokia.com])
+AM_INIT_AUTOMAKE([glmemperf], [0.8])
 AC_CONFIG_SRCDIR([util.h])
 AC_CONFIG_HEADER([config.h])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])

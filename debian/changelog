@@ -1,3 +1,9 @@
+glmemperf (0.8) unstable; urgency=low
+
+  * Warn if window is going through composition
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Fri, 19 Nov 2010 17:06:31 +0200
+
 glmemperf (0.7) unstable; urgency=low
 
   * Added R8 texture format tests
