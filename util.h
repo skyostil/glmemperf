@@ -39,6 +39,15 @@ private:
     std::string m_what;
 };
 
+#define ASSERT(COND) \
+    do \
+    { \
+        if (!(COND)) \
+        { \
+            throw GLException("Assertion failed: " #COND); \
+        } \
+    } while (0)
+
 /**
  *  Verify that GL commands up to this point have not produced any errors.
  */

@@ -67,10 +67,10 @@ void PixmapBlitTest::prepare()
 
     success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy, m_config, m_width,
 	                         m_height, &m_pixmap);
-    assert(success);
+    ASSERT(success);
 
     success = fillPixmap();
-    assert(success);
+    ASSERT(success);
 
     const EGLint surfAttrs[] =
     {
@@ -81,10 +81,10 @@ void PixmapBlitTest::prepare()
     };
 
     m_surface = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmap, surfAttrs);
-    assert(m_surface != EGL_NO_SURFACE);
+    ASSERT(m_surface != EGL_NO_SURFACE);
 
     success = eglBindTexImage(ctx.dpy, m_surface, EGL_BACK_BUFFER);
-    assert(success);
+    ASSERT(success);
 
     ASSERT_GL();
 }
@@ -97,7 +97,7 @@ bool PixmapBlitTest::fillPixmap()
         return false;
     }
 
-    assert(img->data);
+    ASSERT(img->data);
 
     switch (img->depth)
     {
@@ -108,7 +108,7 @@ bool PixmapBlitTest::fillPixmap()
         fillImage<uint32_t>(*img);
         break;
     default:
-        assert(!"Unknown pixmap depth");
+        ASSERT(!"Unknown pixmap depth");
         return false;
     }
 

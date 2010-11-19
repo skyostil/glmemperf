@@ -276,8 +276,8 @@ void ShaderBlitTest::prepare()
         vertSource = vertSourceBlur;
         fragSource = fragSourceBlur;
     }
-    assert(fragSource);
-    assert(vertSource);
+    ASSERT(fragSource);
+    ASSERT(vertSource);
 
     m_program = createProgram(vertSource, fragSource);
     glUseProgram(m_program);
@@ -400,7 +400,7 @@ void ShaderBlitTest::prepare()
         ASSERT_GL();
 
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        assert(status == GL_FRAMEBUFFER_COMPLETE);
+        ASSERT(status == GL_FRAMEBUFFER_COMPLETE);
         ASSERT_GL();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

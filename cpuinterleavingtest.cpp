@@ -115,13 +115,13 @@ void CPUInterleavingTest::prepare()
             EGLint configCount = 0;
 
             eglChooseConfig(ctx.dpy, pixmapConfigAttrs, &m_config, 1, &configCount);
-            assert(configCount);
+            ASSERT(configCount);
 
             for (i = 0; i < m_buffers; i++)
             {
                 success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy,
                                              m_config, m_width, m_height, &m_pixmaps[i]);
-                assert(success);
+                ASSERT(success);
 
                 XGCValues gcValues;
                 m_gc[i] = XCreateGC(ctx.nativeDisplay, m_pixmaps[i], 0, &gcValues);
@@ -135,11 +135,11 @@ void CPUInterleavingTest::prepare()
                 };
 
                 m_surfaces[i] = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmaps[i], surfAttrs);
-                assert(m_surfaces[i] != EGL_NO_SURFACE);
+                ASSERT(m_surfaces[i] != EGL_NO_SURFACE);
 
                 glBindTexture(GL_TEXTURE_2D, m_textures[i]);
                 success = eglBindTexImage(ctx.dpy, m_surfaces[i], EGL_BACK_BUFFER);
-                assert(success);
+                ASSERT(success);
 
                 XVisualInfo visualInfo;
                 XVisualInfo* visual;
@@ -149,7 +149,7 @@ void CPUInterleavingTest::prepare()
                 visual = XGetVisualInfo(ctx.nativeDisplay, VisualDepthMask | VisualScreenMask, 
                                         &visualInfo, &visualCount);
 
-                assert(visualCount > 0);
+                ASSERT(visualCount > 0);
 
                 m_ximage[i] = XShmCreateImage(ctx.nativeDisplay, visual->visual, m_dataBitsPerPixel,
                                               ZPixmap, NULL,
@@ -158,10 +158,10 @@ void CPUInterleavingTest::prepare()
                                             m_ximage[i]->bytes_per_line *
                                             m_ximage[i]->height, IPC_CREAT | 0777);
                 m_shminfo[i].shmaddr = m_ximage[i]->data = (char*)shmat(m_shminfo[i].shmid, 0, 0);
-                assert(m_shminfo[i].shmaddr);
+                ASSERT(m_shminfo[i].shmaddr);
                 m_shminfo[i].readOnly = False;
                 Status status = XShmAttach(ctx.nativeDisplay, &m_shminfo[i]);
-                assert(status);
+                ASSERT(status);
 
                 m_textureData[i] = m_ximage[i]->data;
                 m_dataStride = m_ximage[i]->bytes_per_line;
@@ -183,8 +183,8 @@ void CPUInterleavingTest::prepare()
             m_eglUnlockSurfaceKHR =
                 (PFNEGLUNLOCKSURFACEKHRPROC)eglGetProcAddress("eglUnlockSurfaceKHR");
 
-            assert(m_eglLockSurfaceKHR);
-            assert(m_eglUnlockSurfaceKHR);
+            ASSERT(m_eglLockSurfaceKHR);
+            ASSERT(m_eglUnlockSurfaceKHR);
 
             if (!isEGLExtensionSupported("EGL_KHR_image_base"))
             {
@@ -203,9 +203,9 @@ void CPUInterleavingTest::prepare()
             m_glEGLImageTargetTexture2DOES =
                 (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
 
-            assert(m_eglCreateImageKHR);
-            assert(m_eglDestroyImageKHR);
-            assert(m_glEGLImageTargetTexture2DOES);
+            ASSERT(m_eglCreateImageKHR);
+            ASSERT(m_eglDestroyImageKHR);
+            ASSERT(m_glEGLImageTargetTexture2DOES);
 
             const EGLint pixmapConfigAttrs[] =
             {
@@ -219,23 +219,23 @@ void CPUInterleavingTest::prepare()
             EGLint configCount = 0;
 
             eglChooseConfig(ctx.dpy, pixmapConfigAttrs, &m_config, 1, &configCount);
-            assert(configCount);
+            ASSERT(configCount);
 
             for (i = 0; i < m_buffers; i++)
             {
                 success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy,
                                              m_config, m_width, m_height, &m_pixmaps[i]);
-                assert(success);
+                ASSERT(success);
 
                 m_surfaces[i] = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmaps[i], NULL);
-                assert(m_surfaces[i] != EGL_NO_SURFACE);
+                ASSERT(m_surfaces[i] != EGL_NO_SURFACE);
 
                 // Create an EGL image from the pixmap
                 m_images[i] = m_eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT,
                                                   EGL_NATIVE_PIXMAP_KHR,
                                                   (EGLClientBuffer)m_pixmaps[i],
                                                   NULL);
-                assert(m_images[i]);
+                ASSERT(m_images[i]);
 
                 // Bind the image to a texture
                 glBindTexture(GL_TEXTURE_2D, m_textures[i]);
@@ -246,7 +246,7 @@ void CPUInterleavingTest::prepare()
         }
         break;
     default:
-        assert(0);
+        ASSERT(0);
         return;
     }
 }
@@ -293,7 +293,7 @@ void CPUInterleavingTest::teardown()
         }
         break;
     default:
-        assert(0);
+        ASSERT(0);
         return;
     }
 
@@ -416,7 +416,7 @@ void CPUInterleavingTest::operator()(int frame)
         }
         break;
     default:
-        assert(0);
+        ASSERT(0);
         break;
     }
 

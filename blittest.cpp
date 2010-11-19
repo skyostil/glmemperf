@@ -178,14 +178,14 @@ void BlitTest::initializeBlitter()
 
     m_positionAttr = glGetAttribLocation(m_program, "in_position");
     m_texcoordAttr = glGetAttribLocation(m_program, "in_texcoord");
-    assert(m_positionAttr >= 0);
-    assert(m_texcoordAttr >= 0);
+    ASSERT(m_positionAttr >= 0);
+    ASSERT(m_texcoordAttr >= 0);
 
     glEnableVertexAttribArray(m_positionAttr);
     glEnableVertexAttribArray(m_texcoordAttr);
 
     m_textureUnif = glGetUniformLocation(m_program, "texture");
-    assert(m_textureUnif >= 0);
+    ASSERT(m_textureUnif >= 0);
     glUniform1i(m_textureUnif, 0);
 
     glGenTextures(1, &m_texture);
@@ -196,7 +196,7 @@ void BlitTest::initializeBlitter()
 
     GLint read;
     glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &read);
-    assert(read == GL_NEAREST);
+    ASSERT(read == GL_NEAREST);
     glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &read);
-    assert(read == GL_NEAREST);
+    ASSERT(read == GL_NEAREST);
 }

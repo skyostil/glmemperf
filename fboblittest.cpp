@@ -59,7 +59,7 @@ void FBOBlitTest::prepare()
     ASSERT_GL();
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    assert(status == GL_FRAMEBUFFER_COMPLETE);
+    ASSERT(status == GL_FRAMEBUFFER_COMPLETE);
 
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);

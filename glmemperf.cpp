@@ -377,7 +377,7 @@ void findDataDirectory()
         return;
     }
     chdir(PREFIX "/share/glmemperf/");
-    assert(stat("data", &st) == 0);
+    ASSERT(stat("data", &st) == 0);
 }
 
 #define ADD_TEST(TEST) runTest(*std::auto_ptr<Test>(new TEST));
@@ -415,11 +415,11 @@ int main(int argc, char** argv)
     EGLint configCount = 0;
 
     bool result = nativeCreateDisplay(&ctx.nativeDisplay);
-    assert(result);
+    ASSERT(result);
 
     getScreenSize(winWidth, winHeight);
     result = initializeEgl(winWidth, winHeight, configAttrs, contextAttrs);
-    assert(result);
+    ASSERT(result);
 
     eglChooseConfig(ctx.dpy, configAttrs32, &config32, 1, &configCount);
 
