@@ -487,6 +487,7 @@ int main(int argc, char** argv)
     ADD_TEST(ShaderBlitTest("lingrad", w, h));
     ADD_TEST(ShaderBlitTest("radgrad", w, h));
     ADD_TEST(ShaderBlitTest("palette", w, h));
+    ADD_TEST(ShaderBlitTest("blur", w, h));
     
     // CPU interleaving
     ADD_TEST(CPUInterleavingTest(CPUI_XSHM_IMAGE, 2, 16, winWidth, winHeight));

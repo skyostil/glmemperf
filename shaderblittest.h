@@ -30,13 +30,16 @@
 class ShaderBlitTest: public Test
 {
 protected:
-    GLint m_program;
+    GLint m_program, m_secondaryProgram;
     GLint m_positionAttr, m_texcoordAttr;
     GLuint m_texture;
     int m_width, m_height;
     float m_texW, m_texH;
     float m_quadW, m_quadH;
     std::string m_effect;
+    GLuint m_framebuffers[2];
+    GLuint m_fboTextures[2];
+    int m_downSample;
 
 public:
     ShaderBlitTest(const std::string& effect, int width, int height, 
