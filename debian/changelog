@@ -1,3 +1,9 @@
+glmemperf (0.6) unstable; urgency=low
+
+  * Don't crash if libosso failed to initialize
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Fri, 19 Nov 2010 16:43:13 +0200
+
 glmemperf (0.5) unstable; urgency=low
 
   * Added script for creating reference frames
