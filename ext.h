@@ -23,6 +23,7 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <GLES2/gl2ext.h>
 
 #ifndef EGL_KHR_lock_surface
 #define EGL_KHR_lock_surface 1
@@ -55,6 +56,14 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLUNLOCKSURFACEKHRPROC) (EGLDisplay display
 #ifndef EGL_KHR_lock_surface2
 #define EGL_KHR_lock_surface2 1
 #define EGL_BITMAP_PIXEL_SIZE_KHR               0x3110
+#endif
+
+/* GL_IMG_texture_compression_pvrtc */
+#ifndef GL_IMG_texture_compression_pvrtc
+#define GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG                      0x8C00
+#define GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG                      0x8C01
+#define GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG                     0x8C02
+#define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG                     0x8C03
 #endif
 
 #endif // EXT_H

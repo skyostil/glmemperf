@@ -41,6 +41,7 @@
 #include "shaderblittest.h"
 #include "cpuinterleavingtest.h"
 #include "config.h"
+#include "ext.h"
 
 #if defined(HAVE_LIBOSSO)
 #include <libosso.h>

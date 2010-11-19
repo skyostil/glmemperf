@@ -29,10 +29,6 @@
 
 #include <map>
 
-#include <EGL/egl.h>
-
-#include <GLES2/gl2ext.h>
-
 #include <X11/extensions/XShm.h>
 
 enum CPUInterleavingMethod

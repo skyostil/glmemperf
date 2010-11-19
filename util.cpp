@@ -21,13 +21,15 @@
  * EGL and OpenGL ES utility functions
  */
 #include "util.h"
+#include "ext.h"
+
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
-#include <GLES2/gl2ext.h>
 
 void swapBuffers()
 {
