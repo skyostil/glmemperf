@@ -67,10 +67,10 @@ void nativeDestroyWindow(EGLNativeDisplayType nativeDisplay, EGLNativeWindowType
  *  @param config                       Configuration to be used with the pixmap
  *  @param width                        Pixmap width in pixels
  *  @param height                       Pixmap height in pixels
- *  @param nativPixmap                  Output: new pixmap handle
+ *  @param nativePixmap                 Output: new pixmap handle
  */
-EGLBoolean nativeCreatePixmap(EGLNativeDisplayType nativeDisplay, 
-                              EGLDisplay dpy, EGLConfig config, 
+EGLBoolean nativeCreatePixmap(EGLNativeDisplayType nativeDisplay,
+                              EGLDisplay dpy, EGLConfig config,
                               int width, int height, EGLNativePixmapType *nativePixmap);
 
 /**

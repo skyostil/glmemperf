@@ -69,7 +69,7 @@ osso_context_t* ossoContext;
 bool initializeEgl(int width, int height, const EGLint* configAttrs, const EGLint* contextAttrs)
 {
     EGLint configCount = 0;
-    
+
 #if defined(HAVE_LIBOSSO)
     ossoContext = osso_initialize("com.nokia.memperf", "1.0", FALSE, NULL);
     if (!ossoContext)
@@ -251,7 +251,7 @@ void runTest(Test& test)
 
     ASSERT_GL();
     ASSERT_EGL();
-    
+
     test.teardown();
     ASSERT_GL();
     ASSERT_EGL();

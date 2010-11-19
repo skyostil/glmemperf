@@ -52,7 +52,7 @@ class CPUInterleavingTest: public BlitTest
     CPUInterleavingMethod m_method;
     int m_buffers;
     GLuint m_textures[CPUI_MAX_BUFFERS];
-    
+
     char* m_textureData[CPUI_MAX_BUFFERS];
     int m_textureDataSize[CPUI_MAX_BUFFERS];
     int m_dataStride;
@@ -65,7 +65,7 @@ class CPUInterleavingTest: public BlitTest
     EGLSurface m_surfaces[CPUI_MAX_BUFFERS];
     EGLImageKHR m_images[CPUI_MAX_BUFFERS];
     EGLConfig m_config;
-    
+
     XShmSegmentInfo m_shminfo[CPUI_MAX_BUFFERS];
     XImage* m_ximage[CPUI_MAX_BUFFERS];
     GC m_gc[CPUI_MAX_BUFFERS];
@@ -84,8 +84,8 @@ class CPUInterleavingTest: public BlitTest
 
 public:
     CPUInterleavingTest(CPUInterleavingMethod method, int buffers,
-			int bitsPerPixel,
-			int width, int height,
+                        int bitsPerPixel,
+                        int width, int height,
                         float texW = 1.0f, float texH = 1.0f);
 
     void prepare();

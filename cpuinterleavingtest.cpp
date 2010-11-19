@@ -52,8 +52,8 @@ void fillTexture(TYPE* pixels, int width, int height, int stride, int frame)
 }
 
 CPUInterleavingTest::CPUInterleavingTest(CPUInterleavingMethod method,
-					 int buffers, int bitsPerPixel,
-					 int width, int height,
+                                         int buffers, int bitsPerPixel,
+                                         int width, int height,
                                          float texW, float texH):
     BlitTest(width, height, false, texW, texH),
     m_method(method),
@@ -75,9 +75,9 @@ void CPUInterleavingTest::prepare()
     glGenTextures(m_buffers, m_textures);
     for (int i = 0; i < m_buffers; i++)
     {
-	glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
     ASSERT_GL();
@@ -85,14 +85,14 @@ void CPUInterleavingTest::prepare()
     switch (m_method)
     {
     case CPUI_TEXTURE_UPLOAD:
-	{
-	    m_dataStride = m_width * m_dataBitsPerPixel / 8;
-	    for (i = 0; i < m_buffers; i++)
-	    {
-		m_textureData[i] = new char[m_height * m_dataStride];
-	    }
-	}
-	break;
+        {
+            m_dataStride = m_width * m_dataBitsPerPixel / 8;
+            for (i = 0; i < m_buffers; i++)
+            {
+                m_textureData[i] = new char[m_height * m_dataStride];
+            }
+        }
+        break;
     case CPUI_XSHM_IMAGE:
         {
             Status shmSupported = XShmQueryExtension(ctx.nativeDisplay);
@@ -113,8 +113,8 @@ void CPUInterleavingTest::prepare()
             eglChooseConfig(ctx.dpy, pixmapConfigAttrs, &m_config, 1, &configCount);
             assert(configCount);
 
-	    for (i = 0; i < m_buffers; i++)
-	    {
+            for (i = 0; i < m_buffers; i++)
+            {
                 success = nativeCreatePixmap(ctx.nativeDisplay, ctx.dpy,
                                              m_config, m_width, m_height, &m_pixmaps[i]);
                 assert(success);
@@ -136,7 +136,7 @@ void CPUInterleavingTest::prepare()
                 glBindTexture(GL_TEXTURE_2D, m_textures[i]);
                 success = eglBindTexImage(ctx.dpy, m_surfaces[i], EGL_BACK_BUFFER);
                 assert(success);
-                
+
                 XVisualInfo visualInfo;
                 XVisualInfo* visual;
                 int visualCount = 0;
@@ -242,8 +242,8 @@ void CPUInterleavingTest::prepare()
         }
         break;
     default:
-	assert(0);
-	return;
+        assert(0);
+        return;
     }
 }
 
@@ -255,13 +255,13 @@ void CPUInterleavingTest::teardown()
     switch (m_method)
     {
     case CPUI_TEXTURE_UPLOAD:
-	{
-	    for (i = 0; i < m_buffers; i++)
-	    {
-		delete[] m_textureData[i];
-	    }
-	}
-	break;
+        {
+            for (i = 0; i < m_buffers; i++)
+            {
+                delete[] m_textureData[i];
+            }
+        }
+        break;
     case CPUI_XSHM_IMAGE:
         {
 	    for (i = 0; i < m_buffers; i++)
@@ -289,8 +289,8 @@ void CPUInterleavingTest::teardown()
         }
         break;
     default:
-	assert(0);
-	return;
+        assert(0);
+        return;
     }
 
     BlitTest::teardown();
@@ -305,20 +305,20 @@ std::string CPUInterleavingTest::name() const
     switch (m_method)
     {
     case CPUI_TEXTURE_UPLOAD:
-	s << "texupload";
-	break;
+        s << "texupload";
+        break;
     case CPUI_XSHM_IMAGE:
-	s << "shmimage";
-	break;
+        s << "shmimage";
+        break;
     case CPUI_IMG_TEXTURE_STREAMING:
-	s << "texstream";
+        s << "texstream";
         break;
     case CPUI_PIXEL_BUFFER_OBJECT:
-	s << "pbo";
-	break;
+        s << "pbo";
+        break;
     case CPUI_EGL_LOCK_SURFACE:
-	s << "locksurf";
-	break;
+        s << "locksurf";
+        break;
     }
 
     switch (m_dataBitsPerPixel)
@@ -361,13 +361,13 @@ void CPUInterleavingTest::operator()(int frame)
     switch (m_dataBitsPerPixel)
     {
     case 16:
-	fillTexture(reinterpret_cast<uint16_t*>(m_textureData[m_writeBuffer]),
-		    m_width, m_height, m_dataStride, frame);
-	break;
+        fillTexture(reinterpret_cast<uint16_t*>(m_textureData[m_writeBuffer]),
+                    m_width, m_height, m_dataStride, frame);
+        break;
     case 32:
-	fillTexture(reinterpret_cast<uint32_t*>(m_textureData[m_writeBuffer]),
-		    m_width, m_height, m_dataStride, frame);
-	break;
+        fillTexture(reinterpret_cast<uint32_t*>(m_textureData[m_writeBuffer]),
+                    m_width, m_height, m_dataStride, frame);
+        break;
     }
 
     glBindTexture(GL_TEXTURE_2D, m_textures[m_writeBuffer]);
@@ -375,17 +375,17 @@ void CPUInterleavingTest::operator()(int frame)
     switch (m_method)
     {
     case CPUI_TEXTURE_UPLOAD:
-	if (m_dataBitsPerPixel == 32)
-	{
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0,
-		         GL_RGBA, GL_UNSIGNED_BYTE, m_textureData[m_writeBuffer]);
-	}
-	else
-	{
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0,
-		         GL_RGB, GL_UNSIGNED_SHORT_5_6_5, m_textureData[m_writeBuffer]);
-	}
-	break;
+        if (m_dataBitsPerPixel == 32)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0,
+                         GL_RGBA, GL_UNSIGNED_BYTE, m_textureData[m_writeBuffer]);
+        }
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0,
+                         GL_RGB, GL_UNSIGNED_SHORT_5_6_5, m_textureData[m_writeBuffer]);
+        }
+        break;
     case CPUI_XSHM_IMAGE:
         {
             // Wait for the completion event for this buffer

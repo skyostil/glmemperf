@@ -137,7 +137,7 @@ GLint createProgram(const std::string& vertSrc, const std::string& fragSrc)
     }
     assert(success);
     return program;
-} 
+}
 
 std::string textureFormatName(GLenum format, GLenum type)
 {

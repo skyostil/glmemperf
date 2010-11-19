@@ -38,7 +38,7 @@ EGLBoolean nativeCreateDisplay(EGLNativeDisplayType *pNativeDisplay)
         fprintf(stderr, "XOpenDisplay failed\n");
         return EGL_FALSE;
     }
-    
+
     return EGL_TRUE;
 }
 
@@ -137,7 +137,7 @@ EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
     windowTitle.format   = 8;
     windowTitle.nitems   = strlen(title);
     XSetWMName(nativeDisplay, window, &windowTitle);
-    
+
     XMapWindow(nativeDisplay, window);
     XFlush(nativeDisplay);
 
@@ -181,7 +181,7 @@ EGLBoolean nativeCreatePixmap(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
         fprintf(stderr, "eglGetConfigAttrib failed: %x\n", eglGetError());
         return EGL_FALSE;
     }
-    
+
     pixmap = XCreatePixmap(nativeDisplay, rootWindow, width, height, depth);
 
     if (!pixmap)
