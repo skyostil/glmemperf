@@ -146,8 +146,11 @@ void terminateEgl()
     nativeDestroyDisplay(ctx.nativeDisplay);
 
 #if defined(HAVE_LIBOSSO)
-    osso_deinitialize(ossoContext);
-    ossoContext = 0;
+    if (ossoContext)
+    {
+        osso_deinitialize(ossoContext);
+        ossoContext = 0;
+    }
 #endif
 }
 
@@ -233,7 +236,10 @@ void runTest(Test& test)
     ASSERT_EGL();
 
 #if defined(HAVE_LIBOSSO)
-    osso_display_blanking_pause(ossoContext);
+    if (ossoContext)
+    {
+        osso_display_blanking_pause(ossoContext);
+    }
 #endif
 
     clock_gettime(CLOCK_REALTIME, &start);
