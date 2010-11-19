@@ -144,7 +144,18 @@ std::string textureFormatName(GLenum format, GLenum type)
     switch (type)
     {
     case GL_UNSIGNED_BYTE:
-        return ((format == GL_RGB) ? "rgb888" : "rgba8888");
+        if (format == GL_LUMINANCE)
+        {
+            return "r8";
+        }
+        else if (format == GL_RGB)
+        {
+            return "rgb888";
+        }
+        else
+        {
+            return "rgba8888";
+        }
     case GL_UNSIGNED_SHORT_5_6_5:
         return "rgb565";
     case GL_UNSIGNED_SHORT_4_4_4_4:

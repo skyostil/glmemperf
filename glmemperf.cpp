@@ -437,6 +437,8 @@ int main(int argc, char** argv)
     ADD_TEST(BlitTest(GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, 0, 1024, 512, "data/abstract3_1024x512_pvrtc4.raw", false, 800.0 / 1024, 480.0 / 512));
     ADD_TEST(BlitTest(GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG, 0, 1024, 512, "data/abstract3_1024x512_pvrtc2.raw", false, 800.0 / 1024, 480.0 / 512));
     ADD_TEST(BlitTest(GL_ETC1_RGB8_OES,                   0, 1024, 512, "data/abstract3_1024x512_etc1.raw", false, 800.0 / 1024, 480.0 / 512));
+    ADD_TEST(BlitTest(GL_LUMINANCE, GL_UNSIGNED_BYTE,         800, 480, "data/abstract3_04_800x480_r8.raw"));
+    ADD_TEST(BlitTest(GL_LUMINANCE, GL_UNSIGNED_BYTE,        1024, 512, "data/abstract3_04_1024x512_r8.raw", false, 800.0 / 1024, 480.0 / 512));
     ADD_TEST(PixmapBlitTest(w, h, ctx.config));
     ADD_TEST(PixmapBlitTest(w, h, config32));
     ADD_TEST(FBOBlitTest(GL_RGBA, GL_UNSIGNED_BYTE,          w, h));
