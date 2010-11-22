@@ -1,3 +1,9 @@
+glmemperf (0.13) unstable; urgency=low
+
+  * Build dependency fixes
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Mon, 22 Nov 2010 17:42:05 +0200
+
 glmemperf (0.10) unstable; urgency=low
 
   * Ported pixmap test from EGL_NOK_texture_from_pixmap to
