@@ -157,6 +157,8 @@ EGLBoolean nativeCreateWindow(EGLNativeDisplayType nativeDisplay, EGLDisplay dpy
                            CWBackPixmap | CWBorderPixel | CWColormap,
                            &winAttrs);
 
+    XFree(visual);
+
     if (!window)
     {
         fprintf(stderr, "XCreateSimpleWindow failed\n");

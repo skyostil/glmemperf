@@ -154,6 +154,9 @@ void CPUInterleavingTest::prepare()
                 m_ximage[i] = XShmCreateImage(ctx.nativeDisplay, visual->visual, m_dataBitsPerPixel,
                                               ZPixmap, NULL,
                                               &m_shminfo[i], m_width, m_height);
+
+		XFree(visual);
+
                 m_shminfo[i].shmid = shmget(IPC_PRIVATE, 
                                             m_ximage[i]->bytes_per_line *
                                             m_ximage[i]->height, IPC_CREAT | 0777);
