@@ -1,3 +1,9 @@
+glmemperf (0.14) unstable; urgency=low
+
+  * Don't leak X11 visual info
+
+ -- Sami Kyöstilä <sami.kyostila@nokia.com>  Fri, 07 Jan 2011 13:33:26 +0200
+
 glmemperf (0.13) unstable; urgency=low
 
   * Build dependency fixes
