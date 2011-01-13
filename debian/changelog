@@ -1,3 +1,9 @@
+glmemperf (0.15) unstable; urgency=low
+
+  * Put LIBS to LDADD instead of LDFLAGS
+
+ -- Pauli Nieminen <ext-pauli.nieminen@nokia.com>  Thu, 13 Jan 2011 19:49:23 +0200
+
 glmemperf (0.14) unstable; urgency=low
 
   * Don't leak X11 visual info
