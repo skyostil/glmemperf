@@ -69,6 +69,30 @@ CPUInterleavingTest::CPUInterleavingTest(CPUInterleavingMethod method,
 }
 
 
+void CPUInterleavingTest::prepareEGLImageExtension()
+{
+    if (!isEGLExtensionSupported("EGL_KHR_image_base"))
+    {
+        fail("EGL_KHR_image_base not supported");
+    }
+
+    if (!isEGLExtensionSupported("EGL_KHR_image_pixmap"))
+    {
+        fail("EGL_KHR_image_pixmap not supported");
+    }
+
+    m_eglCreateImageKHR =
+        (PFNEGLCREATEIMAGEKHRPROC)eglGetProcAddress("eglCreateImageKHR");
+    m_eglDestroyImageKHR =
+        (PFNEGLDESTROYIMAGEKHRPROC)eglGetProcAddress("eglDestroyImageKHR");
+    m_glEGLImageTargetTexture2DOES =
+        (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+
+    ASSERT(m_eglCreateImageKHR);
+    ASSERT(m_eglDestroyImageKHR);
+    ASSERT(m_glEGLImageTargetTexture2DOES);
+}
+
 void CPUInterleavingTest::prepare()
 {
     int i;
@@ -99,6 +123,8 @@ void CPUInterleavingTest::prepare()
         break;
     case CPUI_XSHM_IMAGE:
         {
+            prepareEGLImageExtension();
+
             Status shmSupported = XShmQueryExtension(ctx.nativeDisplay);
             if (!shmSupported)
             {
@@ -126,20 +152,18 @@ void CPUInterleavingTest::prepare()
                 XGCValues gcValues;
                 m_gc[i] = XCreateGC(ctx.nativeDisplay, m_pixmaps[i], 0, &gcValues);
 
-                const EGLint surfAttrs[] =
-                {
-                    EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGB,
-                    EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
-                    EGL_MIPMAP_TEXTURE, EGL_FALSE,
-                    EGL_NONE
-                };
+                // Create an EGL image from the pixmap
+                m_images[i] = m_eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT,
+                                                  EGL_NATIVE_PIXMAP_KHR,
+                                                  (EGLClientBuffer)m_pixmaps[i],
+                                                  NULL);
+                ASSERT(m_images[i]);
 
-                m_surfaces[i] = eglCreatePixmapSurface(ctx.dpy, m_config, m_pixmaps[i], surfAttrs);
-                ASSERT(m_surfaces[i] != EGL_NO_SURFACE);
-
+                // Bind the image to a texture
                 glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-                success = eglBindTexImage(ctx.dpy, m_surfaces[i], EGL_BACK_BUFFER);
-                ASSERT(success);
+                m_glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_images[i]);
+                ASSERT_GL();
+                m_writeCompleted[i] = true;
 
                 XVisualInfo visualInfo;
                 XVisualInfo* visual;
@@ -175,6 +199,8 @@ void CPUInterleavingTest::prepare()
         break;
     case CPUI_EGL_LOCK_SURFACE:
         {
+            prepareEGLImageExtension();
+
             if (!isEGLExtensionSupported("EGL_KHR_lock_surface2"))
             {
                 fail("EGL_KHR_lock_surface2 not supported");
@@ -188,27 +214,6 @@ void CPUInterleavingTest::prepare()
 
             ASSERT(m_eglLockSurfaceKHR);
             ASSERT(m_eglUnlockSurfaceKHR);
-
-            if (!isEGLExtensionSupported("EGL_KHR_image_base"))
-            {
-                fail("EGL_KHR_image_base not supported");
-            }
-
-            if (!isEGLExtensionSupported("EGL_KHR_image_pixmap"))
-            {
-                fail("EGL_KHR_image_pixmap not supported");
-            }
-
-            m_eglCreateImageKHR =
-                (PFNEGLCREATEIMAGEKHRPROC)eglGetProcAddress("eglCreateImageKHR");
-            m_eglDestroyImageKHR =
-                (PFNEGLDESTROYIMAGEKHRPROC)eglGetProcAddress("eglDestroyImageKHR");
-            m_glEGLImageTargetTexture2DOES =
-                (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
-
-            ASSERT(m_eglCreateImageKHR);
-            ASSERT(m_eglDestroyImageKHR);
-            ASSERT(m_glEGLImageTargetTexture2DOES);
 
             const EGLint pixmapConfigAttrs[] =
             {
@@ -278,8 +283,7 @@ void CPUInterleavingTest::teardown()
                 shmdt(m_shminfo[i].shmaddr);
                 shmctl(m_shminfo[i].shmid, IPC_RMID, 0);
 
-                eglReleaseTexImage(ctx.dpy, m_surfaces[i], EGL_BACK_BUFFER);
-                eglDestroySurface(ctx.dpy, m_surfaces[i]);
+                m_eglDestroyImageKHR(ctx.dpy, m_images[i]);
                 nativeDestroyPixmap(ctx.nativeDisplay, m_pixmaps[i]);
                 XFreeGC(ctx.nativeDisplay, m_gc[i]);
             }

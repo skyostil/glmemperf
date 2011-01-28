@@ -89,6 +89,9 @@ public:
     void teardown();
 
     std::string name() const;
+
+private:
+    void prepareEGLImageExtension();
 };
 
 #endif // CPUINTERLEAVINGTEST_H
