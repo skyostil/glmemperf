@@ -179,7 +179,7 @@ void CPUInterleavingTest::prepare()
                                               ZPixmap, NULL,
                                               &m_shminfo[i], m_width, m_height);
 
-		XFree(visual);
+                XFree(visual);
 
                 m_shminfo[i].shmid = shmget(IPC_PRIVATE, 
                                             m_ximage[i]->bytes_per_line *
