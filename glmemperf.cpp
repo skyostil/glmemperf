@@ -117,7 +117,7 @@ bool initializeEgl(int width, int height, const EGLint* configAttrs, const EGLin
         printf("Unable to create a context\n");
         goto out_error;
     }
-    
+
     ctx.surface = eglCreateWindowSurface(ctx.dpy, ctx.config, ctx.win, NULL);
     ASSERT_EGL();
     if (!ctx.surface)
@@ -128,7 +128,7 @@ bool initializeEgl(int width, int height, const EGLint* configAttrs, const EGLin
 
     eglMakeCurrent(ctx.dpy, ctx.surface, ctx.surface, ctx.context);
     ASSERT_EGL();
-    
+
     eglSwapInterval(ctx.dpy, 0);
     return true;
 
@@ -296,7 +296,7 @@ void getScreenSize(int& width, int& height)
 
 void showIntro()
 {
-    std::cout << 
+    std::cout <<
         "GLMemPerf v" PACKAGE_VERSION " - OpenGL ES 2.0 memory performance benchmark\n"
         "Copyright (C) 2010 Nokia Corporation. GLMemPerf comes with ABSOLUTELY\n"
         "NO WARRANTY; This is free software, and you are welcome to redistribute\n"
@@ -306,7 +306,7 @@ void showIntro()
 
 void showUsage()
 {
-    std::cout << 
+    std::cout <<
         "Usage:\n"
         "       glmemperf [OPTIONS]\n"
         "Options:\n"
@@ -508,7 +508,7 @@ int main(int argc, char** argv)
     ADD_TEST(ShaderBlitTest("radgrad", w, h));
     ADD_TEST(ShaderBlitTest("palette", w, h));
     ADD_TEST(ShaderBlitTest("blur", w, h));
-    
+
     // CPU interleaving
     ADD_TEST(CPUInterleavingTest(CPUI_XSHM_IMAGE, 2, 16, winWidth, winHeight));
     ADD_TEST(CPUInterleavingTest(CPUI_XSHM_IMAGE, 2, 32, winWidth, winHeight));
