@@ -15,6 +15,7 @@ glmemperf_SOURCES = \
     cleartest.cpp \
     blittest.cpp \
     pixmapblittest.cpp \
+    blitmultitest.cpp \
     fboblittest.cpp \
     shaderblittest.cpp \
     cpuinterleavingtest.cpp

@@ -42,6 +42,7 @@
 #include "blittest.h"
 #include "cleartest.h"
 #include "pixmapblittest.h"
+#include "blitmultitest.h"
 #include "fboblittest.h"
 #include "shaderblittest.h"
 #include "cpuinterleavingtest.h"
@@ -471,6 +472,32 @@ int main(int argc, char** argv)
     ADD_TEST(FBOBlitTest(GL_RGBA, GL_UNSIGNED_BYTE,        1024, 512, true, h / 512, w / 1024));
     ADD_TEST(FBOBlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5, w, h, true, h / w, w / h));
     ADD_TEST(FBOBlitTest(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5, 1024, 512, true, h / 512, w / 1024));
+
+    /* Test composition performance */
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, ctx.config, false, 2));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, ctx.config, true, 2));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", false, 2));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", true, 2));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, config32,   false, 2));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, config32,   true, 2));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", false, 2));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", true, 2));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, ctx.config, false, 4));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, ctx.config, true, 4));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", false, 4));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", true, 4));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, config32,   false, 4));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, config32,   true, 4));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", false, 4));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", true, 4));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, ctx.config, false, 8));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, ctx.config, true, 8));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", false, 8));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGB,  GL_UNSIGNED_SHORT_5_6_5,       800, 480, "data/water2_800x480_rgb565.raw", true, 8));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(w, h, config32,   false, 8));
+    ADD_TEST(BlitMultiTest<PixmapBlitTest>(h, w, config32,   true, 8));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", false, 8));
+    ADD_TEST(BlitMultiTest<BlitTest>(GL_RGBA, GL_UNSIGNED_BYTE,              800, 480, "data/water2_800x480_rgba8888.raw", true, 8));
 
     int gridW = 5;
     int gridH = 3;
