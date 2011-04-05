@@ -91,7 +91,9 @@ void BlitTest::teardown()
     glUseProgram(0);
     glDisableVertexAttribArray(m_positionAttr);
     glDisableVertexAttribArray(m_texcoordAttr);
-    glDeleteProgram(m_program);
+    if (m_program)
+        glDeleteProgram(m_program);
+    m_program = 0;
     glDeleteTextures(1, &m_texture);
 }
 
