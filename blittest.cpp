@@ -92,8 +92,7 @@ void BlitTest::teardown()
     glDisableVertexAttribArray(m_positionAttr);
     glDisableVertexAttribArray(m_texcoordAttr);
     glDeleteProgram(m_program);
-    // Disabled until driver segfault is fixed
-    //glDeleteTextures(1, &m_texture);
+    glDeleteTextures(1, &m_texture);
 }
 
 void BlitTest::prepare()
