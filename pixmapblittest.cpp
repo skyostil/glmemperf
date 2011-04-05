@@ -50,7 +50,6 @@ PixmapBlitTest::PixmapBlitTest(int width, int height, EGLConfig config,
     BlitTest(width, height, rotate, texW, texH),
     m_pixmap(0),
     m_config(config),
-    m_image(0),
     m_depth(0)
 {
     eglGetConfigAttrib(ctx.dpy, m_config, EGL_BUFFER_SIZE, &m_depth);
@@ -102,13 +101,16 @@ void PixmapBlitTest::prepare()
         EGL_NONE
     };
 
-    m_image = eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                                (EGLClientBuffer)m_pixmap, imageAttributes);
-    ASSERT(m_image);
+    EGLImageKHR image;
+    image = eglCreateImageKHR(ctx.dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+                              (EGLClientBuffer)m_pixmap, imageAttributes);
+    ASSERT(image);
     ASSERT_EGL();
 
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_image);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
     ASSERT_GL();
+    eglDestroyImageKHR(ctx.dpy, image);
+    ASSERT_EGL();
 }
 
 bool PixmapBlitTest::fillPixmap()
@@ -145,7 +147,6 @@ bool PixmapBlitTest::fillPixmap()
 
 void PixmapBlitTest::teardown()
 {
-    eglDestroyImageKHR(ctx.dpy, m_image);
     nativeDestroyPixmap(ctx.nativeDisplay, m_pixmap);
     BlitTest::teardown();
 }

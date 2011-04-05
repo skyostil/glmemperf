@@ -33,7 +33,6 @@ class PixmapBlitTest: public BlitTest
 {
     Pixmap m_pixmap;
     EGLConfig m_config;
-    EGLImageKHR m_image;
     int m_depth;
 
     PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
