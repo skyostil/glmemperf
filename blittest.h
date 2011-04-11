@@ -42,7 +42,6 @@ protected:
     std::string m_fileName;
     std::string m_vertSource;
     std::string m_fragSource;
-    int m_clear_frame;
 
 public:
     BlitTest(int width, int height, 
@@ -60,6 +59,7 @@ public:
 
 protected:
     void initializeBlitter();
+    void render(int frame);
 };
 
 #endif // BLITTEST_H

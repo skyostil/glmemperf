@@ -77,8 +77,7 @@ BlitTest::BlitTest(GLenum format, GLenum type, int width, int height, const std:
     m_rotate(rotate),
     m_fileName(fileName),
     m_vertSource(defaultVertSource),
-    m_fragSource(defaultFragSource),
-    m_clear_frame(-1)
+    m_fragSource(defaultFragSource)
 {
     if (m_format >= 0x8c00)
     {
@@ -114,7 +113,7 @@ void BlitTest::prepare()
     ASSERT_GL();
 }
 
-void BlitTest::operator()(int frame)
+void BlitTest::render(int frame)
 {
     float t = frame / 400.0f;
 
@@ -148,11 +147,13 @@ void BlitTest::operator()(int frame)
 
     glVertexAttribPointer(m_positionAttr, 2, GL_FLOAT, GL_FALSE, 0, vertices);
     glVertexAttribPointer(m_texcoordAttr, 2, GL_FLOAT, GL_FALSE, 0, m_rotate ? texcoordsRotated : texcoords);
-    if (m_clear_frame != frame) {
-        m_clear_frame = frame;
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void BlitTest::operator()(int frame)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    render(frame);
 }
 
 std::string BlitTest::name() const
