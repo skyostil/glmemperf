@@ -44,8 +44,8 @@ BlitMultiTest<BlitTest>::BlitMultiTest(GLenum format, GLenum type, int width, in
 {
 }
 
-template <class parent>
-void BlitMultiTest<parent>::pixmap_prepare()
+template <class PARENT>
+void BlitMultiTest<PARENT>::pixmap_prepare()
 {
 }
 
@@ -55,8 +55,8 @@ void BlitMultiTest<PixmapBlitTest>::pixmap_prepare()
     m_pixmaps.push_back(PixmapBlitTest::m_pixmap);
 }
 
-template <class parent>
-void BlitMultiTest<parent>::pixmap_teardown()
+template <class PARENT>
+void BlitMultiTest<PARENT>::pixmap_teardown()
 {
 }
 
@@ -67,58 +67,58 @@ void BlitMultiTest<PixmapBlitTest>::pixmap_teardown()
     m_pixmaps.pop_back();
 }
 
-template <class parent>
-void BlitMultiTest<parent>::prepare()
+template <class PARENT>
+void BlitMultiTest<PARENT>::prepare()
 {
     int i;
     for (i = 0; i < m_nr_textures; ++i) {
-        parent::prepare();
+        PARENT::prepare();
         pixmap_prepare();
-        m_textures.push_back(parent::m_texture);
+        m_textures.push_back(PARENT::m_texture);
         if (m_nr_textures != i + 1) {
             glUseProgram(0);
-            glDeleteProgram(parent::m_program);
+            glDeleteProgram(PARENT::m_program);
         }
     }
 }
 
-template <class parent>
-void BlitMultiTest<parent>::operator()(int frame)
+template <class PARENT>
+void BlitMultiTest<PARENT>::operator()(int frame)
 {
     int i = 0;
     glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-    parent::operator()(frame);
+    PARENT::operator()(frame);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     for (i = 1; i < m_nr_textures; ++i) {
         glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-        parent::operator()(frame);
+        PARENT::render(frame);
     }
 
     glDisable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ZERO);
 }
 
-template <class parent>
-void BlitMultiTest<parent>::teardown()
+template <class PARENT>
+void BlitMultiTest<PARENT>::teardown()
 {
     int i;
     for (i = 0; i < m_nr_textures; ++i) {
-        parent::m_texture = m_textures.back();
+        PARENT::m_texture = m_textures.back();
         m_textures.pop_back();
         pixmap_teardown();
-        parent::teardown();
+        PARENT::teardown();
     }
 }
 
-template <class parent>
-std::string BlitMultiTest<parent>::name() const
+template <class PARENT>
+std::string BlitMultiTest<PARENT>::name() const
 {
     std::stringstream ss;
 
-    ss << parent::name();
-    ss << "_blend_" << m_nr_textures;
+    ss << PARENT::name();
+    ss << "_blend" << m_nr_textures;
 
     return ss.str();
 }
