@@ -50,7 +50,7 @@ const char *defaultFragSource =
 
 BlitTest::BlitTest(int width, int height, 
                    bool rotate, float texW, float texH,
-                   float quadW, float quadH):
+                   float quadW, float quadH, bool blend):
     m_width(width),
     m_height(height),
     m_texW(texW),
@@ -58,6 +58,7 @@ BlitTest::BlitTest(int width, int height,
     m_quadW(quadW),
     m_quadH(quadH),
     m_rotate(rotate),
+    m_blend(blend),
     m_vertSource(defaultVertSource),
     m_fragSource(defaultFragSource)
 {
@@ -65,7 +66,7 @@ BlitTest::BlitTest(int width, int height,
 
 BlitTest::BlitTest(GLenum format, GLenum type, int width, int height, const std::string& fileName,
                    bool rotate, float texW, float texH,
-                   float quadW, float quadH):
+                   float quadW, float quadH, bool blend):
     m_format(format),
     m_type(type),
     m_width(width),
@@ -75,6 +76,7 @@ BlitTest::BlitTest(GLenum format, GLenum type, int width, int height, const std:
     m_quadW(quadW),
     m_quadH(quadH),
     m_rotate(rotate),
+    m_blend(blend),
     m_fileName(fileName),
     m_vertSource(defaultVertSource),
     m_fragSource(defaultFragSource)
@@ -94,6 +96,11 @@ void BlitTest::teardown()
         glDeleteProgram(m_program);
     m_program = 0;
     glDeleteTextures(1, &m_texture);
+
+    if (m_blend)
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void BlitTest::prepare()
@@ -205,4 +212,10 @@ void BlitTest::initializeBlitter()
     ASSERT(read == GL_NEAREST);
     glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &read);
     ASSERT(read == GL_NEAREST);
+
+    if (m_blend)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 }

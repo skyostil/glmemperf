@@ -32,7 +32,7 @@ template <class parent>
 class BlitMultiTest: public parent
 {
 protected:
-    std::vector<Pixmap> m_pixmaps;
+    std::vector<NativePixmapType> m_pixmaps;
     std::vector<GLuint> m_textures;
     int m_nr_textures;
     bool m_blend;

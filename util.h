@@ -28,6 +28,16 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <assert.h>
+#include <time.h>
+
+#if defined(SUPPORT_ANDROID)
+#include <android/log.h>
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "glmemperf", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "glmemperf", __VA_ARGS__))
+#else
+#define LOGI(...) ((void)fprintf(stdout, __VA_ARGS__))
+#define LOGW(...) ((void)fprintf(stderr, __VA_ARGS__))
+#endif
 
 class GLException : public std::exception {
 public:
@@ -57,8 +67,9 @@ private:
         GLint err = glGetError(); \
         if (err) \
         { \
-            char msg[100]; \
-            snprintf(msg, 100, "GL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            char msg[128]; \
+            snprintf(msg, sizeof(msg), "GL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            LOGW("%s\n", msg); \
             throw GLException(msg); \
         } \
     } while (0)
@@ -72,8 +83,9 @@ private:
         EGLint err = eglGetError(); \
         if (err != EGL_SUCCESS) \
         { \
-            char msg[100]; \
-            snprintf(msg, 100, "EGL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            char msg[128]; \
+            snprintf(msg, sizeof(msg), "EGL error 0x%x (%d) at %s:%d", err, err, __FILE__, __LINE__); \
+            LOGW("%s\n", msg); \
             throw GLException(msg); \
         } \
     } while (0)
@@ -89,6 +101,9 @@ struct Context
     EGLDisplay dpy;
     EGLContext context;
     EGLSurface surface;
+#if defined(SUPPORT_ANDROID)
+    struct AAssetManager* assetManager;
+#endif
 };
 
 extern struct Context ctx;
@@ -172,5 +187,7 @@ std::string textureFormatName(GLenum format, GLenum type);
  *  @param config               EGL config
  */
 void dumpConfig(EGLDisplay dpy, EGLConfig config);
+
+int64_t timeDiff(const struct timespec& start, const struct timespec& end);
 
 #endif // UTIL_H

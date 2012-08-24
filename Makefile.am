@@ -8,7 +8,7 @@ CXXFLAGS=${X_CFLAGS} ${OSSO_CFLAGS} -Wall -g -O3 -DSUPPORT_X11 -DPREFIX=\"$(pref
 bin_PROGRAMS = glmemperf
 bin_SCRIPTS = glmemperf-create-ref.sh
 glmemperf_SOURCES = \
-    glmemperf.cpp \
+    runner_cli.cpp \
     native_x11.c \
     util.cpp \
     test.cpp \

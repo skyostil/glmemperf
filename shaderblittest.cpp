@@ -52,8 +52,9 @@ void ShaderBlitTest::teardown()
     {
         glDeleteProgram(m_secondaryProgram);
     }
-    // Disabled until driver segfault is fixed
-    //glDeleteTextures(1, &m_texture);
+    glDeleteTextures(1, &m_texture);
+    glDisable(GL_BLEND);
+    glViewport(m_savedViewport[0], m_savedViewport[1], m_savedViewport[2], m_savedViewport[3]);
 }
 
 void ShaderBlitTest::operator()(int frame)
@@ -283,6 +284,7 @@ void ShaderBlitTest::prepare()
     glUseProgram(m_program);
 
     glClearColor(.2, .4, .6, 1.0);
+    glGetIntegerv(GL_VIEWPORT, m_savedViewport);
 
     m_positionAttr = glGetAttribLocation(m_program, "in_position");
     m_texcoordAttr = glGetAttribLocation(m_program, "in_texcoord");
@@ -330,6 +332,8 @@ void ShaderBlitTest::prepare()
 
     if (m_effect == "mask")
     {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

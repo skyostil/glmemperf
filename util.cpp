@@ -31,6 +31,10 @@
 #include <string.h>
 #include <fcntl.h>
 
+#if defined(SUPPORT_ANDROID)
+#include <android/asset_manager.h>
+#endif
+
 void swapBuffers()
 {
 #if 1
@@ -44,6 +48,19 @@ void swapBuffers()
 bool loadRawTexture(GLenum target, int level, GLenum internalFormat, int width,
                     int height, GLenum format, GLenum type, const std::string& fileName)
 {
+    // TODO: Remove duplicated code.
+#if defined(SUPPORT_ANDROID)
+    AAsset* asset = AAssetManager_open(ctx.assetManager, fileName.c_str(), O_RDONLY);
+    if (!asset)
+    {
+        LOGW("Unable to open asset %s", fileName.c_str());
+        return false;
+    }
+    off_t size = AAsset_getLength(asset);
+    void* pixels = malloc(size);
+    AAsset_read(asset, pixels, size);
+    AAsset_close(asset);
+#else // !SUPPORT_ANDROID
     int fd = open(fileName.c_str(), O_RDONLY); 
 
     if (fd == -1)
@@ -58,12 +75,17 @@ bool loadRawTexture(GLenum target, int level, GLenum internalFormat, int width,
         perror("stat");
         return false;
     }
-
     void* pixels = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+#endif // !SUPPORT_ANDROID
+
     glTexImage2D(target, level, internalFormat, width, height, 0, format, type, pixels);
 
+#if defined(SUPPORT_ANDROID)
+    free(pixels);
+#else
     munmap(pixels, sb.st_size);
     close(fd);
+#endif
 
     ASSERT_GL();
     return true;
@@ -72,6 +94,18 @@ bool loadRawTexture(GLenum target, int level, GLenum internalFormat, int width,
 bool loadCompressedTexture(GLenum target, int level, GLenum internalFormat, int width,
                            int height, const std::string& fileName)
 {
+#if defined(SUPPORT_ANDROID)
+    AAsset* asset = AAssetManager_open(ctx.assetManager, fileName.c_str(), O_RDONLY);
+    if (!asset)
+    {
+        LOGW("Unable to open asset %s", fileName.c_str());
+        return false;
+    }
+    off_t size = AAsset_getLength(asset);
+    void* pixels = malloc(size);
+    AAsset_read(asset, pixels, size);
+    AAsset_close(asset);
+#else // !SUPPORT_ANDROID
     int fd = open(fileName.c_str(), O_RDONLY); 
 
     if (fd == -1)
@@ -86,12 +120,18 @@ bool loadCompressedTexture(GLenum target, int level, GLenum internalFormat, int 
         perror("stat");
         return false;
     }
+    off_t size = sb.st_size;
+    void* pixels = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
+#endif // !SUPPORT_ANDROID
 
-    void* pixels = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    glCompressedTexImage2D(target, level, internalFormat, width, height, 0, sb.st_size, pixels);
+    glCompressedTexImage2D(target, level, internalFormat, width, height, 0, size, pixels);
 
+#if defined(SUPPORT_ANDROID)
+    free(pixels);
+#else
     munmap(pixels, sb.st_size);
     close(fd);
+#endif
 
     ASSERT_GL();
     return true;
@@ -112,7 +152,7 @@ GLint createProgram(const std::string& vertSrc, const std::string& fragSrc)
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, sizeof(infoLog), &logLength, infoLog);
-        printf("Vertex shader compilation failed:\n%s\n", infoLog);
+        LOGW("Vertex shader compilation failed:\n%s\n", infoLog);
     }
     ASSERT(success);
 
@@ -123,7 +163,7 @@ GLint createProgram(const std::string& vertSrc, const std::string& fragSrc)
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, sizeof(infoLog), &logLength, infoLog);
-        printf("Fragment shader compilation failed:\n%s\n", infoLog);
+        LOGW("Fragment shader compilation failed:\n%s\n", infoLog);
     }
     ASSERT(success);
 
@@ -135,7 +175,7 @@ GLint createProgram(const std::string& vertSrc, const std::string& fragSrc)
     if (!success)
     {
         glGetProgramInfoLog(program, sizeof(infoLog), &logLength, infoLog);
-        printf("Program linking failed:\n%s\n", infoLog);
+        LOGW("Program linking failed:\n%s\n", infoLog);
     }
     ASSERT(success);
     return program;
@@ -185,14 +225,14 @@ std::string textureFormatName(GLenum format, GLenum type)
         EGLint value; \
         eglGetConfigAttrib(dpy, config, attr, &value); \
 	ASSERT_EGL(); \
-        printf("%-32s: %10d (0x%x)\n", #attr, value, value); \
+        LOGI("%-32s: %10d (0x%x)\n", #attr, value, value); \
         { \
             unsigned i; \
             for (i = 0; i < sizeof(consts) / sizeof(consts[0]); i++) \
             { \
                 if (value == consts[i].value) \
                 { \
-                    printf("%-44s %s\n", "", consts[i].name); \
+                    LOGI("%-44s %s\n", "", consts[i].name); \
                 } \
             } \
         } \
@@ -202,7 +242,7 @@ std::string textureFormatName(GLenum format, GLenum type)
             { \
                 if (value & bits[i].value) \
                 { \
-                    printf("%-44s %s\n", "", bits[i].name); \
+                    LOGI("%-44s %s\n", "", bits[i].name); \
                 } \
             } \
         } \
@@ -347,4 +387,11 @@ bool isEGLExtensionSupported(const std::string& name)
 bool isGLExtensionSupported(const std::string& name)
 {
     return isExtensionSupported((const char*)glGetString(GL_EXTENSIONS), name);
+}
+
+int64_t timeDiff(const struct timespec& start, const struct timespec& end)
+{
+    int64_t s = start.tv_sec * (1000 * 1000 * 1000LL) + start.tv_nsec;
+    int64_t e =   end.tv_sec * (1000 * 1000 * 1000LL) +   end.tv_nsec;
+    return e - s;
 }

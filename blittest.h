@@ -39,6 +39,7 @@ protected:
     float m_texW, m_texH;
     float m_quadW, m_quadH;
     bool m_rotate;
+    bool m_blend;
     std::string m_fileName;
     std::string m_vertSource;
     std::string m_fragSource;
@@ -46,11 +47,11 @@ protected:
 public:
     BlitTest(int width, int height, 
              bool rotate = false, float texW = 1.0f, float texH = 1.0f,
-             float quadW = 1.0f, float quadH = 1.0f);
+             float quadW = 1.0f, float quadH = 1.0f, bool blend = false);
 
     BlitTest(GLenum format, GLenum type, int width, int height, const std::string& fileName,
              bool rotate = false, float texW = 1.0f, float texH = 1.0f,
-             float quadW = 1.0f, float quadH = 1.0f);
+             float quadW = 1.0f, float quadH = 1.0f, bool blend = false);
 
     void prepare();
     void operator()(int frame);

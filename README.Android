@@ -1,0 +1,14 @@
+GLMemPerf for Android
+=====================
+
+To build the debug version:
+
+    $ $ANDROID_NDK_ROOT/ndk-build
+    $ ant debug
+    $ adb install -r bin/GLMemPerf-debug.apk
+
+Start GLMemPerf from the application launcher and view results with logcat:
+
+    $ adb logcat -s glmemperf
+
+Note that currently no pixmap related tests are supported.

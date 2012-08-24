@@ -89,6 +89,8 @@ EGLBoolean nativeCreatePixmap(EGLNativeDisplayType nativeDisplay,
  */
 void nativeDestroyPixmap(EGLNativeDisplayType nativeDisplay, EGLNativePixmapType nativePixmap);
 
+void nativeGetScreenSize(EGLNativeDisplayType nativeDisplay, int* width, int* height);
+
 #if defined(__cplusplus)
 }
 #endif

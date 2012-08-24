@@ -266,3 +266,13 @@ EGLBoolean nativeVerifyWindow(EGLNativeDisplayType nativeDisplay,
     }
     return EGL_TRUE;
 }
+
+void nativeGetScreenSize(EGLNativeDisplayType nativeDisplay, int* width, int* height)
+{
+    Window rootWindow = DefaultRootWindow(nativeDisplay);
+
+    XWindowAttributes rootAttrs;
+    XGetWindowAttributes(nativeDisplay, rootWindow, &rootAttrs);
+    *width = rootAttrs.width;
+    *height = rootAttrs.height;
+}

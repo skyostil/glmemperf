@@ -40,6 +40,7 @@ protected:
     GLuint m_framebuffers[2];
     GLuint m_fboTextures[2];
     int m_downSample;
+    GLint m_savedViewport[4];
 
 public:
     ShaderBlitTest(const std::string& effect, int width, int height, 

@@ -27,12 +27,13 @@
 #include <sstream>
 #include <stdio.h>
 
+#if defined(SUPPORT_X11)
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XShm.h>
-
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#endif
 
 template <typename TYPE>
 void fillTexture(TYPE* pixels, int width, int height, int stride, int frame)
@@ -121,6 +122,7 @@ void CPUInterleavingTest::prepare()
             }
         }
         break;
+#if defined(SUPPORT_X11)
     case CPUI_XSHM_IMAGE:
         {
             prepareEGLImageExtension();
@@ -197,6 +199,8 @@ void CPUInterleavingTest::prepare()
             }
         }
         break;
+#endif // SUPPORT_X11
+#if !defined(SUPPORT_ANDROID)
     case CPUI_EGL_LOCK_SURFACE:
         {
             prepareEGLImageExtension();
@@ -253,6 +257,7 @@ void CPUInterleavingTest::prepare()
             }
         }
         break;
+#endif //!defined(SUPPORT_ANDROID)
     default:
         ASSERT(0);
         return;
@@ -274,10 +279,11 @@ void CPUInterleavingTest::teardown()
             }
         }
         break;
+#if defined(SUPPORT_X11)
     case CPUI_XSHM_IMAGE:
         {
-	    for (i = 0; i < m_buffers; i++)
-	    {
+            for (i = 0; i < m_buffers; i++)
+            {
                 XShmDetach(ctx.nativeDisplay, &m_shminfo[i]);
                 XDestroyImage(m_ximage[i]);
                 shmdt(m_shminfo[i].shmaddr);
@@ -289,6 +295,8 @@ void CPUInterleavingTest::teardown()
             }
         }
         break;
+#endif
+#if !defined(SUPPORT_ANDROID)
     case CPUI_EGL_LOCK_SURFACE:
         {
             for (i = 0; i < m_buffers; i++)
@@ -299,6 +307,7 @@ void CPUInterleavingTest::teardown()
             }
         }
         break;
+#endif //!defined(SUPPORT_ANDROID)
     default:
         ASSERT(0);
         return;
@@ -397,6 +406,7 @@ void CPUInterleavingTest::operator()(int frame)
                          GL_RGB, GL_UNSIGNED_SHORT_5_6_5, m_textureData[m_writeBuffer]);
         }
         break;
+#if defined(SUPPORT_X11)
     case CPUI_XSHM_IMAGE:
         {
             // Wait for the completion event for this buffer
@@ -417,6 +427,7 @@ void CPUInterleavingTest::operator()(int frame)
             m_writeCompleted[m_writeBuffer] = false;
         }
         break;
+#endif // SUPPORT_X11
     case CPUI_EGL_LOCK_SURFACE:
         {
             m_eglUnlockSurfaceKHR(ctx.dpy, m_surfaces[m_readBuffer]);

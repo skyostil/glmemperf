@@ -32,7 +32,7 @@
 class PixmapBlitTest: public BlitTest
 {
 protected:
-    Pixmap m_pixmap;
+    NativePixmapType m_pixmap;
     EGLConfig m_config;
     int m_depth;
 

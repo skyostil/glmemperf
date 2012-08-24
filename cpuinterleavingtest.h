@@ -27,9 +27,10 @@
 #include "util.h"
 #include "ext.h"
 
-#include <map>
-
+#if defined(SUPPORT_X11)
 #include <X11/extensions/XShm.h>
+#include <map>
+#endif
 
 enum CPUInterleavingMethod
 {
@@ -57,17 +58,19 @@ class CPUInterleavingTest: public BlitTest
     int m_readBuffer;
     int m_writeBuffer;
 
-    Pixmap m_pixmaps[CPUI_MAX_BUFFERS];
+    NativePixmapType m_pixmaps[CPUI_MAX_BUFFERS];
     EGLSurface m_surfaces[CPUI_MAX_BUFFERS];
     EGLImageKHR m_images[CPUI_MAX_BUFFERS];
     EGLConfig m_config;
+    bool m_writeCompleted[CPUI_MAX_BUFFERS];
 
+#if defined(SUPPORT_X11)
     XShmSegmentInfo m_shminfo[CPUI_MAX_BUFFERS];
     XImage* m_ximage[CPUI_MAX_BUFFERS];
     GC m_gc[CPUI_MAX_BUFFERS];
     int m_completionEvent;
     std::map<Drawable, int> m_drawableIndex;
-    bool m_writeCompleted[CPUI_MAX_BUFFERS];
+#endif
 
     // Lock surface functions
     PFNEGLLOCKSURFACEKHRPROC m_eglLockSurfaceKHR;
